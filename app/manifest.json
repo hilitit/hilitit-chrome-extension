@@ -11,6 +11,7 @@
   "web_accessible_resources":["icons/*.png"],
   "background": {
     "scripts": [
+      "scripts/contentscript.js",
       "scripts/chromereload.js",
       "bower_components/jquery/dist/jquery.min.js",
       "bower_components/ddp.js/src/ddp.js",
@@ -21,19 +22,27 @@
       "bower_components/asteroid/dist/plugins/google-login.js",
       "bower_components/asteroid/dist/plugins/github-login.js",
       "scripts/background.js"
-    ]
+    ],
+    "persistent": false
+
   },
   "browser_action": {
     "default_icon": {
       "19": "images/icon-19.png",
       "38": "images/icon-38.png"
     },
-    "default_title": "TLDR",
-    "default_popup": "popup.html"
+    "default_title": "Hilit.it",
+    "default_popup": "options.html"
   },
-  "options_page": "options.html",
+
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true,
+    "open_in_tab": true
+  },
+
   "omnibox": {
-    "keyword": "TLDR"
+    "keyword": "Hilit.it"
   },
   "content_scripts": [
     {
@@ -43,6 +52,7 @@
       ],
       "css": ["styles/main.css"],
       "js": [
+        "scripts/chromereload.js",
         "scripts/contentscript.js",
         "bower_components/jquery/dist/jquery.min.js",
         "bower_components/ddp.js/src/ddp.js",
@@ -52,13 +62,16 @@
         "bower_components/asteroid/dist/plugins/twitter-login.js",
         "bower_components/asteroid/dist/plugins/google-login.js",
         "bower_components/asteroid/dist/plugins/github-login.js"
-      ],
-      "run_at": "document_end",
-      "all_frames": false
+      ]
     }
   ],
   "permissions": [
+    "identity",
+    "storage",
+    "declarativeContent",
+    "background",
     "tabs",
+    "activeTab",
     "history",
     "management",
     "http://*/*",

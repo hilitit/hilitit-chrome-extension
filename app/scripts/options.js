@@ -3,52 +3,127 @@
 console.log('\'Allo \'Allo! Option');
 
 
-var bgContext = chrome.extension.getBackgroundPage();
 
-$(function () {
-  console.log('$function()');
-  /*
-  // Find out if we're active and set the checkboxes to correct value ASAP
-  chrome.storage.sync.get(null,
-  function(items){
-  for (var key in items) {
-  if (items.hasOwnProperty(key)){
-  $('#' + key).prop('checked', items[key]);
-}
-}
-}
-);
 
-// Add handlers for the toggle button to store state in chrome.storage
-$('input[type=checkbox]').click(
-function () {
-var toStore = {};
-toStore[this.id] = this.checked;
-chrome.storage.sync.set(toStore);
-}
-);
+/*
+console.log(ddpConnection);
+ddpConnection.on("connected", function () {
+console.log("DD KD DK DKD KD KD KDD");
+});
+
+ddpConnection.on("login", function () {
+console.log("FFF F F F F F F F");
+});*/
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  var background = chrome.extension.getBackgroundPage()
+
+
+/*
+  Ceres.on("login", function () {
+    console.log('Logged in !');
+  });
+
+  Ceres.on("logout", function () {
+    console.log('logged in !');
+  });
+
+
+  Ceres.on("connected", function () {
+    console.log(  'connected !');
+  });
 */
 
+var checkUI = function() {
 
+  if (background.ddpConnection.userId){
+    console.log('user is logged in');
+    $('#login').hide();
+    $('#logout').show();
+  } else {
+    console.log('user is logged out');
+    $('#logout').hide();
+    $('#login').show();
+  }
+
+}
+
+checkUI();
+
+console.log("DOMContentLoaded");
 $('.login_link').click(
   function(){
     console.log('Login:   ' + this.id);
-    chrome.runtime.sendMessage(this.id);
-  }
-);
+    chrome.runtime.sendMessage({type: this.id});
+
+    /*
+    ddpConnection.resumeLoginPromise.then(function alreadyLoggedIn() {
+    console.log("user is already logged in");
+  }).fail(function notAlreadyLoggedIn() {
+
+  ddpConnection.on("login", function loginWorked(loggedInUserId) {
+  console.log('logged in as:' + loggedInUserId);
+  ddpConnection.userId = loggedInUserId
+});
+
+ddpConnection.subscribe("meteor.loginServiceConfiguration").ready.then(function tryToLogin() {
+console.log('Login:  222 ');
+ddpConnection.loginWithTwitter();
+});
+});
+*/
+
+});
+
+
+
+var doLogin = function(callback){
+
+
+}
 
 $('#logout').click(
   function(){
     console.log('attempting logout');
-    chrome.runtime.sendMessage('logout');
-  }
-);
+    background.logout(
+      function(response){
+        console.log("logout response: " + response);
+        checkUI();
+      });
+    });
 
-if (bgContext.ddpConnection.userId){
-  console.log('user is logged in');
-  $('#login').hide();
-} else {
-  console.log('user is logged out');
-  $('#logout').hide();
-}
+
+
+
+    $("#login-form").submit(function(event) {
+      console.log('#login-form');
+      event.preventDefault();
+      console.log('attempting login');
+      console.log($('#username').val());
+      console.log($('#password').val());
+
+      background.login({ 'type': "login_plain",
+       'username': $('#username').val(),
+       'password': $('#password').val()  },   function repoonse(response) {
+            console.log("response");
+            console.log("login response: " + response);
+            checkUI();
+          })
+/*
+      chrome.runtime.sendMessage(
+        { 'type': "login_plain",
+         'username': $('#username').val(),
+         'password': $('#password').val()  } ,
+         function (response) {
+           console.log("response");
+           console.log("login response: " + response);
+         }
+       );
+*/
+      });
+
 });
