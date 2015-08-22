@@ -1,0 +1,36 @@
+<!doctype html>
+<head xmlns="http://www.w3.org/1999/html">
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="browser_action.js"></script>
+<style type="text/css">
+  #mainPopup {
+    padding: 10px;
+    height: 200px;
+    width: 400px;
+    font-family: Helvetica, Ubuntu, Arial, sans-serif;
+  }
+  h1 {
+    font-size: 2em;
+  }
+</style>
+</head>
+<body>
+
+<div id="mainPopup">
+<h1>hilit.it</h1>
+<p>Proofread the web for fun and glory.</p>
+  <p>
+    <input value="activate_fixing" id="fixing_active" type="checkbox">
+    <label for="fixing_active"> Enable editing the current page to fix heinous errors!</label>
+    </p>
+    <!-- TODO not yet implemented
+    <p>
+        <input name="show_current_user_fixes" id="show_user_fixes_active" type="checkbox">Display fixes you made made to this page.
+    </p>
+    -->
+    <div>
+        <input value="show_all_fixes" id="show_all_fixes_active" type="checkbox">
+    <label for="show_all_fixes_active">Display fixes that GFI users have made to this page.</label>
+    </div>
+</div>
+</body>

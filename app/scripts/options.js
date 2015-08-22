@@ -20,23 +20,8 @@ console.log("FFF F F F F F F F");
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  var background = chrome.extension.getBackgroundPage()
+var background = chrome.extension.getBackgroundPage()
 
-
-/*
-  Ceres.on("login", function () {
-    console.log('Logged in !');
-  });
-
-  Ceres.on("logout", function () {
-    console.log('logged in !');
-  });
-
-
-  Ceres.on("connected", function () {
-    console.log(  'connected !');
-  });
-*/
 
 var checkUI = function() {
 
@@ -60,31 +45,10 @@ $('.login_link').click(
     console.log('Login:   ' + this.id);
     chrome.runtime.sendMessage({type: this.id});
 
-    /*
-    ddpConnection.resumeLoginPromise.then(function alreadyLoggedIn() {
-    console.log("user is already logged in");
-  }).fail(function notAlreadyLoggedIn() {
-
-  ddpConnection.on("login", function loginWorked(loggedInUserId) {
-  console.log('logged in as:' + loggedInUserId);
-  ddpConnection.userId = loggedInUserId
-});
-
-ddpConnection.subscribe("meteor.loginServiceConfiguration").ready.then(function tryToLogin() {
-console.log('Login:  222 ');
-ddpConnection.loginWithTwitter();
-});
-});
-*/
-
 });
 
 
 
-var doLogin = function(callback){
-
-
-}
 
 $('#logout').click(
   function(){
@@ -106,13 +70,17 @@ $('#logout').click(
       console.log($('#username').val());
       console.log($('#password').val());
 
+      $('#login-message').text("");
+      
       background.login({ 'type': "login_plain",
        'username': $('#username').val(),
-       'password': $('#password').val()  },   function repoonse(response) {
-            console.log("response");
-            console.log("login response: " + response);
-            checkUI();
-          })
+       'password': $('#password').val()  },
+       function response(response) {
+         if (response.error && response.message ) {
+           $('#login-message').text(response.reason);
+         }
+         checkUI();
+       })
 /*
       chrome.runtime.sendMessage(
         { 'type': "login_plain",

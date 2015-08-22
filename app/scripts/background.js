@@ -52,6 +52,7 @@ function login(request,response){
                 response(result);
               }).catch(function (error) {
                 console.error('Error:', error);
+                response(error);
               });
               break;
             }
@@ -74,6 +75,7 @@ function login(request,response){
               response(result);
             }).catch(function (error) {
               console.error('Error:', error);
+              response(error);
             });
             break;
           }

@@ -11,7 +11,6 @@
   "web_accessible_resources":["icons/*.png"],
   "background": {
     "scripts": [
-      "scripts/contentscript.js",
       "scripts/chromereload.js",
       "bower_components/jquery/dist/jquery.min.js",
       "bower_components/ddp.js/src/ddp.js",
@@ -32,7 +31,7 @@
       "38": "images/icon-38.png"
     },
     "default_title": "Hilit.it",
-    "default_popup": "options.html"
+    "default_popup": "browser_action.html"
   },
 
   "options_ui": {
@@ -52,16 +51,12 @@
       ],
       "css": ["styles/main.css"],
       "js": [
-        "scripts/chromereload.js",
-        "scripts/contentscript.js",
         "bower_components/jquery/dist/jquery.min.js",
+        "scripts/get-selector.js",
         "bower_components/ddp.js/src/ddp.js",
         "bower_components/q/q.js",
         "bower_components/asteroid/dist/asteroid.chrome.js",
-        "bower_components/asteroid/dist/plugins/facebook-login.js",
-        "bower_components/asteroid/dist/plugins/twitter-login.js",
-        "bower_components/asteroid/dist/plugins/google-login.js",
-        "bower_components/asteroid/dist/plugins/github-login.js"
+        "scripts/contentscript.js"
       ]
     }
   ],
