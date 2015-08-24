@@ -3,7 +3,7 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="browser_action.js"></script>
 <style type="text/css">
-  #mainPopup {
+  .popup {
     padding: 10px;
     height: 200px;
     width: 400px;
@@ -16,7 +16,10 @@
 </head>
 <body>
 
-<div id="mainPopup">
+<div id="loginRequired" class="popup">
+    please login first
+</div>
+<div id="mainPopup" class="popup">
 <h1>hilit.it</h1>
 <p>Proofread the web for fun and glory.</p>
   <p>

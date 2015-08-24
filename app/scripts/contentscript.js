@@ -32,63 +32,96 @@ function getTextSelection(){
   console.log( selection );
   return selection.toString();
 }
+/*
+document.addEventListener("mouseup", function(e) {
+   var selection;
 
-$("*").click(function() {
+   if (window.getSelection) {
+     selection = window.getSelection();
+   } else if (document.selection) {
+     selection = document.selection.createRange();
+   }
+
+  selection.toString() !== '' && console.log('"' + selection.toString() + '" was selected at ' + e.pageX + '/' + e.pageY);
+});
+*/
+
+var currentSelection = {};
+
+$("*").mouseup(function(event) {
+   var selection;
+
+   if (window.getSelection) {
+     selection = window.getSelection();
+   } else if (document.selection) {
+     selection = document.selection.createRange();
+   }
+
+  if (selection.toString() !== ''){
+    event.stopPropagation();
+
+    // console.log('"' + selection.toString() + '" was selected at ' + event.pageX + '/' + event.pageY);
+    var selector = $(this).getSelector();
+    // console.log(selector + ' --> matches ' + $(selector).length + ' element');
+
+    currentSelection = {
+      selector: selector,
+      "text": selection.toString() ,
+      "href": window.location.href
+    }
+
+    $('#popup').css('left',event.pageX);      // <<< use pageX and pageY
+    $('#popup').css('top',event.pageY);
+    $('#popup').css('display','inline');
+    $("#popup").css("position", "absolute");  // <<< also make it absolute!
+
+    setTimeout(function(){
+      $('#popup').css('display','none');
+    }, 2000);
+
+  }
+
+});
+
+var hilitCurrentSelection = function()
+{
+  chrome.runtime.sendMessage({type: "insert",obj: currentSelection}, function(response) {
+     console.log(response);
+   });
+}
+
+/*
+$("*").click(function(event) {
+  console.log(event);
+  // console.log("window.location.href:");
+  // console.log(window.location.href);
   var selector = $(this).getSelector();
   console.log(selector + ' --> matches ' + $(selector).length + ' element');
   var selection = getTextSelection();
   if ( selection.toString() !== '' ){
-    var ret = Collection.insert({
-      // "url": "asdfasdf",
-      // "title": "asdfasdfadf",
-      "selector" : selector,
+
+    insert({
+      selector: selector,
       "text": selection.toString() ,
       "href": window.location.href
-    }, function (error, fileObj) {
-      console.log( fileObj );
-      console.log( error );
-    });
-
-    // console.log( ret.local.isPending() );
-    ret.local.then(function (id) {
-      console.log(  "local: " + id );
-    }).catch(function (error) {
-      console.error('local Error:', error);
-    });
-    console.log("local.isPending(): " + ret.local.isPending() );
-    // console.log("local.accepted: " + ret.local.isAccepted() );
-    // console.log( ret.remote.isPending() );
-    ret.remote.then(function (id) {
-      console.log( "remote: " + id );
-    }).catch(function (error) {
-      console.error('remote Error:', error);
-    });
-    console.log( "remote.isPending(): " + ret.remote.isPending() );
+    })
 
   }
-  return false;
+  return true;
 });
+*/
 
 
 
-
-var Collection;
-var fixesForPageQuery;
-var SERVER = "hilit.it:8888";
-var ddpConnection;
-
-var COLLECTION_NAME = "pages";
-var LOGIN = "login";
-
-function init() {
+function init()
+{
   console.log('contentscript.js init');
-  // Connect to the server using Use the Asteroid library ( https://github.com/mondora/asteroid )
-  ddpConnection = new Asteroid(SERVER);
-  // ddpConnection.subscribe( COLLECTION_NAME , window.location.href);
-  // fixesForPageQuery = Collection.reactiveQuery({url:window.location.href});
-  ddpConnection.on(LOGIN,function(){
-    console.log('content_scripts logged in: ' + ddpConnection.userId);
-    Collection = ddpConnection.getCollection( COLLECTION_NAME );
+
+  $( "body" ).append( '<div style="display:none;width:100px;height:50px;border:3px solid black; background-color: gray;" id="popup"><div style="padding: 5px; width: 90px; height: 40px; background-color: white;" id="hilit-button"  value="hilit">Hilit</div></div>' );
+
+  $("#hilit-button").click(function(event) {
+    console.log("hilit-button clicked !!!");
+    hilitCurrentSelection();
   });
 
 }

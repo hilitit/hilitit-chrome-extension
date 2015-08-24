@@ -71,7 +71,7 @@ $('#logout').click(
       console.log($('#password').val());
 
       $('#login-message').text("");
-      
+
       background.login({ 'type': "login_plain",
        'username': $('#username').val(),
        'password': $('#password').val()  },

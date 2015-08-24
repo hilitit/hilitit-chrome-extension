@@ -1,5 +1,14 @@
 'use strict';
 
+
+
+var SERVER = "hilit.it:8888";
+var COLLECTION_NAME = "pages";
+var LOGIN = "login";
+var CONNECTED = "connected";
+var COLLECTION_NAME = "pages";
+
+
 chrome.runtime.onInstalled.addListener(function (details) {
   console.log('previousVersion', details.previousVersion);
 });
@@ -8,14 +17,14 @@ chrome.browserAction.setBadgeText({text: '\'CCCC'});
 
 console.log('\'Allo \'Allo! Event Page for Browser Action');
 
-var ddpConnection = new Asteroid("hilit.it:8888");
+var ddpConnection = new Asteroid(SERVER);
 
-ddpConnection.on("login", function loginWorked(loggedInUserId) {
+ddpConnection.on(LOGIN , function loginWorked(loggedInUserId) {
   console.log('logged in as:' + loggedInUserId);
   ddpConnection.userId = loggedInUserId
 });
 
-ddpConnection.on("connected", function connected() {
+ddpConnection.on(CONNECTED , function connected() {
   console.log('connected !' );
 });
 
@@ -84,13 +93,56 @@ function login(request,response){
 }
 
 
+
 chrome.runtime.onMessage.addListener(function (request, sender, response) {
-  // this lastIndexOf thing is a startsWith implementation
+
+  console.log("request");
+  console.log(request);
+  console.log("sender");
+  console.log(sender);
+  console.log("response");
+  console.log(response);
 
   console.log('chrome message: '  +  request + " "  + sender  + " " + response  + " "  + request.type.startsWith('login') );
-  // response("dddddd");
-  if (request.type.startsWith('login')) {
 
+  if (request.type == 'insert') {
+    // console.log("return back the connecting ...");
+
+    var ret  = ddpConnection.call("pageInsert", request.obj);
+    ret.result
+    .then(function (result) {
+      console.log('Success:', result);
+      response( result );
+    }).catch(function (error) {
+      console.error('Error:', error);
+      response( error );
+    });
+/*
+    var Collection = ddpConnection.getCollection( COLLECTION_NAME );
+
+    var ret = Collection.insert( request.obj , function (error, fileObj) {
+      console.log( fileObj );
+      console.log( error );
+    });
+
+    // console.log( ret.local.isPending() );
+    ret.local.then(function (id) {
+      console.log(  "local: " + id );
+    }).catch(function (error) {
+      console.error('local Error:', error);
+    });
+
+
+    console.log("local.isPending(): " + ret.local.isPending() );
+    // console.log("local.accepted: " + ret.local.isAccepted() );
+    // console.log( ret.remote.isPending() );
+    ret.remote.then(function (id) {
+      console.log( "remote: " + id );
+      response( {id: id} );
+    }).catch(function (error) {
+      console.error('remote Error:', error);
+    });*/
+    // console.log( "remote.isPending(): " + ret.remote.isPending() );
 
   } else if (request.type === 'logout') {
 
