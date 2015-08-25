@@ -46,9 +46,10 @@ document.addEventListener("mouseup", function(e) {
 });
 */
 
-var currentSelection = {};
+var currentSelection = null;
 
 $("*").mouseup(function(event) {
+
    var selection;
 
    if (window.getSelection) {
@@ -62,12 +63,16 @@ $("*").mouseup(function(event) {
 
     // console.log('"' + selection.toString() + '" was selected at ' + event.pageX + '/' + event.pageY);
     var selector = $(this).getSelector();
-    // console.log(selector + ' --> matches ' + $(selector).length + ' element');
+    console.log(selector + ' --> matches ' + $(selector).length + ' element');
+    var selRange = selection.getRangeAt(0);
+    console.log(selection);
 
     currentSelection = {
       selector: selector,
       "text": selection.toString() ,
-      "href": window.location.href
+      "href": window.location.href,
+      "startOffset": selRange.startOffset,
+      "endOffset": selRange.endOffset
     }
 
     $('#popup').css('left',event.pageX);      // <<< use pageX and pageY
@@ -77,6 +82,7 @@ $("*").mouseup(function(event) {
 
     setTimeout(function(){
       $('#popup').css('display','none');
+      $("#hilit-button").text("Hilit");
     }, 2000);
 
   }
@@ -85,6 +91,8 @@ $("*").mouseup(function(event) {
 
 var hilitCurrentSelection = function()
 {
+  console.log("currentSelection");
+  console.log(currentSelection);
   chrome.runtime.sendMessage({type: "insert",obj: currentSelection}, function(response) {
      console.log(response);
    });
@@ -121,6 +129,7 @@ function init()
 
   $("#hilit-button").click(function(event) {
     console.log("hilit-button clicked !!!");
+    $("#hilit-button").text("Hiliting ...");
     hilitCurrentSelection();
   });
 
